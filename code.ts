@@ -1,9 +1,17 @@
 figma.showUI(__html__);
-figma.ui.resize(300, 560);
+figma.ui.resize(300, 760);
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === 'generateConfetti') {
     const { shape, colors, density, sizeRange, spread, randomOrientation, pattern } = msg;
+
+    console.log("Colors Array:", colors); // Log colors to check if any are invalid
+
+    // Check if colors array is valid
+    if (!Array.isArray(colors) || colors.some(color => typeof color !== 'string')) {
+      figma.notify("Invalid color array");
+      return;
+    }
 
     // Get the selected frame
     const selectedFrame = figma.currentPage.selection.find(node => node.type === 'FRAME') as FrameNode;
@@ -21,7 +29,12 @@ figma.ui.onmessage = (msg) => {
     }
 
     function randomColor(): string {
-      return colors[Math.floor(Math.random() * colors.length)];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      if (!color || typeof color !== 'string') {
+        console.error(`Invalid color detected: ${color}`);
+        return "#000000"; // Fallback to black if the color is invalid
+      }
+      return color;
     }
 
     function randomShape(): string {
@@ -37,11 +50,20 @@ figma.ui.onmessage = (msg) => {
     function generatePatternPosition(i: number): { x: number, y: number } {
       console.log(`Generating position for confetti #${i}`);
       switch (pattern) {
-        case 'spiral':
+        case 'goldenRatio':
+          // Golden Ratio Spiral (Classic Fibonacci Growth)
           const goldenAngle = 137.5 * (Math.PI / 180); // Golden angle in radians
-          const radius = 10 * Math.sqrt(i);
-          const xSpiral = selectedFrame.width / 2 + radius * Math.cos(goldenAngle * i);
-          const ySpiral = selectedFrame.height / 2 + radius * Math.sin(goldenAngle * i);
+          const fibonacciRadius = 10 * Math.sqrt(i);  // Golden spiral radius grows with Fibonacci sequence
+          const xGolden = selectedFrame.width / 2 + fibonacciRadius * Math.cos(goldenAngle * i);
+          const yGolden = selectedFrame.height / 2 + fibonacciRadius * Math.sin(goldenAngle * i);
+          return { x: xGolden, y: yGolden };
+
+        case 'spiral':
+          // General Spiral (constant growth of radius)
+          const spiralAngle = 0.1 * Math.PI * i; // Slightly tighter angle for general spiral
+          const spiralRadius = 10 * i; // Radius grows linearly for general spiral
+          const xSpiral = selectedFrame.width / 2 + spiralRadius * Math.cos(spiralAngle);
+          const ySpiral = selectedFrame.height / 2 + spiralRadius * Math.sin(spiralAngle);
           return { x: xSpiral, y: ySpiral };
 
         case 'straight':
@@ -127,6 +149,11 @@ figma.ui.onmessage = (msg) => {
 };
 
 function hexToRgb(hex: string) {
+  if (!hex || typeof hex !== 'string' || !/^#[0-9A-Fa-f]{6}$/i.test(hex)) {
+    console.error(`Invalid hex color: ${hex}`);
+    return { r: 0, g: 0, b: 0 };  // Return black if invalid
+  }
+
   const bigint = parseInt(hex.replace('#', ''), 16);
   return {
     r: ((bigint >> 16) & 255) / 255,

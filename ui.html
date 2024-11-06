@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,12 +26,14 @@
       cursor: pointer;
       width: 100%;
     }
+
     button:hover {
       background-color: #1e88e5;
     }
 
     /* Material 3 input styles */
-    input, select {
+    input,
+    select {
       background-color: #2e2e2e;
       color: #e0e0e0;
       border: 1px solid #3c3c3c;
@@ -54,10 +57,21 @@
       position: relative;
     }
 
+    .option.checkbox {
+      display: flex;
+      align-items: center;
+    }
+
+    .option.checkbox input[type="checkbox"] {
+      width: auto;
+      margin-right: 4px;
+    }
+
     .color-input-container {
       display: flex;
       align-items: center;
     }
+
     .color-palette {
       width: 40px;
       height: 40px;
@@ -72,7 +86,11 @@
       flex-wrap: wrap;
       gap: 8px;
       margin-top: 8px;
+      max-width: 100%;
+      overflow: hidden;
+      justify-content: flex-start;
     }
+
     .color-badge {
       background-color: #2e2e2e;
       color: #e0e0e0;
@@ -80,14 +98,37 @@
       border-radius: 4px;
       display: flex;
       align-items: center;
+      max-width: 100px;
+      white-space: nowrap;
     }
+
     .remove-color {
       margin-left: 4px;
       color: #ff6666;
       cursor: pointer;
     }
+
+    .dropdown-container {
+      position: relative;
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 30px;
+    }
+
+    .dropdown-container .material-icons {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
   </style>
 </head>
+
 <body>
   <h2>Confetti Generator</h2>
 
@@ -128,15 +169,16 @@
         <option value="randomScatter">Random Scatter</option>
         <option value="diagonalLine">Diagonal Line</option>
         <option value="radialBurst">Radial Burst</option>
+        <option value="goldenRatio">goldenRatio</option>
       </select>
       <span class="material-icons">expand_more</span>
-    </div>  
-  </div>  
+    </div>
+  </div>
 
   <!-- Density -->
   <div class="option">
     <label for="density">Density</label>
-    <input type="number" id="density" min="1" max="500" placeholder="e.g., 100" />
+    <input type="number" id="density" min="1" max="500" placeholder="1-500" />
   </div>
 
   <!-- Size Range -->
@@ -153,9 +195,9 @@
   </div>
 
   <!-- Randomize Orientation Checkbox -->
-  <div class="option">
-    <label for="randomOrientation">Randomize Orientation</label>
+  <div class="option checkbox">
     <input type="checkbox" id="randomOrientation" />
+    <label for="randomOrientation">Randomize Orientation</label>
   </div>
 
   <!-- Generate Button -->
@@ -190,7 +232,7 @@
         colorBadge.innerHTML = `${color} <span class="material-icons remove-color" data-index="${index}">close</span>`;
         colorList.appendChild(colorBadge);
       });
-      
+
       // Add event listeners for remove buttons
       document.querySelectorAll('.remove-color').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -223,4 +265,5 @@
     };
   </script>
 </body>
+
 </html>

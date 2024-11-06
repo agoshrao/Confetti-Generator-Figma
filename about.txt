@@ -1,0 +1,45 @@
+# About the Confetti Generator Plugin
+
+## Overview
+The **Confetti Generator Plugin** is a Figma tool designed to add a burst of colorful, customizable confetti shapes to your designs. Whether you're looking to add a celebratory touch or simply create a fun, random pattern, this plugin makes it easy to add confetti with customizable shapes, colors, density, size, and spread.
+
+This plugin is ideal for designers looking to add a playful or dynamic visual effect to their projects with minimal effort.
+
+## Features
+1. **Customizable Shapes**: Choose from multiple shapes such as circles, squares, stars, and triangles. A "Random" option is also available to mix shapes within a single confetti burst.
+   
+2. **Color Options**: Specify the colors for your confetti using HEX values. You can enter multiple colors (comma-separated), and the plugin will randomly select from these colors.
+
+3. **Density Control**: Adjust the density to control how many confetti elements appear. Higher density means more confetti shapes on the canvas.
+
+4. **Size Range**: Define a size range to control the minimum and maximum size of the confetti elements. The plugin will randomly size each shape within this range.
+
+5. **Spread Control**: Adjust the spread area of the confetti with a slider, allowing you to choose how wide the confetti spreads across your selected frame.
+
+## How to Use
+1. **Select or Create a Frame**: To ensure confetti is added within a specific area, create or select a frame in your Figma file where you’d like the confetti to appear.
+
+2. **Open the Plugin**: Launch the Confetti Generator Plugin from the Figma plugins menu.
+
+3. **Configure Settings**:
+   - **Shape**: Select a shape from the dropdown menu (Circle, Square, Star, Triangle, or Random).
+   - **Colors**: Enter one or more colors in HEX format (e.g., `#ff0000, #00ff00, #0000ff`).
+   - **Density**: Specify the number of confetti shapes to generate.
+   - **Size Range**: Enter a size range, such as "10 - 30", to define the smallest and largest confetti shapes.
+   - **Spread Area**: Use the slider to control how much area the confetti covers within the frame.
+
+4. **Generate Confetti**: Click the "Generate Confetti" button. The plugin will add your customized confetti within the selected frame based on your settings.
+
+5. **Adjustments**: If you’re not satisfied with the result, feel free to tweak the settings and click "Generate Confetti" again. This will add new confetti with the updated settings.
+
+## Tips for Best Results
+- **Use Contrasting Colors**: Choose colors that contrast with your design’s background to make the confetti stand out.
+- **Play with Density and Spread**: Lower densities work well for subtle effects, while higher densities create a fuller look. Adjust the spread based on the frame size to control the reach of the confetti.
+- **Experiment with Shapes**: For a fun and dynamic appearance, try the "Random" shape option to mix different shapes within the same confetti burst.
+
+## Troubleshooting
+- **Confetti Appears Outside Frame**: Ensure you've selected a frame before generating confetti, so the plugin knows where to place the elements.
+- **Loader Stuck**: If the plugin gets stuck on the loading screen, close and reopen it to reset. Verify all fields are filled with valid values.
+  
+## Contact & Support
+For questions, suggestions, or support, feel free to reach out to the plugin developer. We’d love to hear your feedback and any feature requests!

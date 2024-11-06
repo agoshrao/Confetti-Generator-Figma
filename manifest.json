@@ -12,7 +12,7 @@
   "ui": "ui.html",
   "networkAccess": {
     "allowedDomains": [
-      "https://fonts.googleapis.com"
+      "https://fonts.googleapis.com", "https://fonts.gstatic.com"
     ]
   }
 }

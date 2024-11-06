@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Confetti Generator</title>
-  <!-- Link to Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     /* Dark Theme */
@@ -41,10 +40,6 @@
       font-size: 14px;
       margin-top: 4px;
     }
-    input[type="range"] {
-      width: 100%;
-      margin-top: 4px;
-    }
 
     label {
       font-size: 14px;
@@ -59,28 +54,44 @@
       position: relative;
     }
 
-    /* Chevron styling for dropdown */
-    .dropdown-container {
+    .color-input-container {
       display: flex;
       align-items: center;
-      position: relative;
     }
-    select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding-right: 32px; /* Space for the chevron icon */
+    .color-palette {
+      width: 40px;
+      height: 40px;
+      border: none;
+      margin-left: 8px;
+      cursor: pointer;
     }
-    .material-icons {
-      position: absolute;
-      right: 12px;
-      pointer-events: none;
-      color: #9e9e9e;
+
+    /* Display list of added colors */
+    .color-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .color-badge {
+      background-color: #2e2e2e;
+      color: #e0e0e0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+    .remove-color {
+      margin-left: 4px;
+      color: #ff6666;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <h2>Confetti Generator</h2>
+
+  <!-- Shape Selection -->
   <div class="option">
     <label for="shape">Shape</label>
     <div class="dropdown-container">
@@ -89,43 +100,126 @@
         <option value="square">Square</option>
         <option value="star">Star</option>
         <option value="triangle">Triangle</option>
+        <option value="hexagon">Hexagon</option>
+        <option value="pentagon">Pentagon</option>
         <option value="random">Random</option>
       </select>
       <span class="material-icons">expand_more</span>
     </div>
   </div>
 
+  <!-- Colors with color palette and add button -->
   <div class="option">
-    <label for="colors">Colors (Comma-separated HEX values)</label>
-    <input type="text" id="colors" placeholder="#ff0000, #00ff00, #0000ff" />
+    <label for="colorPalette">Add Colors</label>
+    <div class="color-input-container">
+      <input type="color" id="colorPalette" class="color-palette" />
+      <button id="addColorBtn" style="width:auto; margin-left: 10px;">Add Color</button>
+    </div>
+    <div id="colorList" class="color-list"></div>
   </div>
 
+  <!-- Pattern Selection -->
+  <div class="option">
+    <label for="pattern">Pattern</label>
+    <div class="dropdown-container">
+      <select id="pattern">
+        <option value="spiral">Spiral</option>
+        <option value="straight">Straight Lines</option>
+        <option value="randomScatter">Random Scatter</option>
+        <option value="diagonalLine">Diagonal Line</option>
+        <option value="radialBurst">Radial Burst</option>
+      </select>
+      <span class="material-icons">expand_more</span>
+    </div>  
+  </div>  
+
+  <!-- Density -->
   <div class="option">
     <label for="density">Density</label>
     <input type="number" id="density" min="1" max="500" placeholder="e.g., 100" />
   </div>
 
+  <!-- Size Range -->
   <div class="option">
     <label for="sizeRange">Size Range (Min - Max)</label>
     <input type="text" id="sizeRange" placeholder="e.g., 10 - 30" />
   </div>
 
+  <!-- Spread Area -->
   <div class="option">
     <label for="spread">Spread Area</label>
     <input type="range" id="spread" min="0" max="100" value="50" />
+    <span id="spreadValue">50%</span>
   </div>
 
+  <!-- Randomize Orientation Checkbox -->
+  <div class="option">
+    <label for="randomOrientation">Randomize Orientation</label>
+    <input type="checkbox" id="randomOrientation" />
+  </div>
+
+  <!-- Generate Button -->
   <button id="generateBtn">Generate Confetti</button>
 
   <script>
+    // Initialize colors array
+    const colors = [];
+
+    // Update spread area display
+    document.getElementById('spread').addEventListener('input', (e) => {
+      document.getElementById('spreadValue').textContent = `${e.target.value}%`;
+    });
+
+    // Add color to list
+    document.getElementById('addColorBtn').addEventListener('click', () => {
+      const colorPicker = document.getElementById('colorPalette');
+      const colorValue = colorPicker.value;
+
+      // Add color to colors array
+      colors.push(colorValue);
+      updateColorList();
+    });
+
+    // Update color list display
+    function updateColorList() {
+      const colorList = document.getElementById('colorList');
+      colorList.innerHTML = '';
+      colors.forEach((color, index) => {
+        const colorBadge = document.createElement('div');
+        colorBadge.className = 'color-badge';
+        colorBadge.innerHTML = `${color} <span class="material-icons remove-color" data-index="${index}">close</span>`;
+        colorList.appendChild(colorBadge);
+      });
+      
+      // Add event listeners for remove buttons
+      document.querySelectorAll('.remove-color').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-index');
+          colors.splice(index, 1);
+          updateColorList();
+        });
+      });
+    }
+
+    // Generate confetti with parameters
     document.getElementById('generateBtn').onclick = () => {
       const shape = document.getElementById('shape').value;
-      const colors = document.getElementById('colors').value.split(',').map(c => c.trim());
       const density = parseInt(document.getElementById('density').value);
+      const pattern = document.getElementById('pattern').value;
+
+      // Parse the size range as an array [min, max]
       const sizeRange = document.getElementById('sizeRange').value.split('-').map(n => parseInt(n.trim()));
       const spread = parseInt(document.getElementById('spread').value);
+      const randomOrientation = document.getElementById('randomOrientation').checked;
 
-      parent.postMessage({ pluginMessage: { type: 'generateConfetti', shape, colors, density, sizeRange, spread } }, '*');
+      // Ensure sizeRange is valid
+      if (sizeRange.length !== 2 || isNaN(sizeRange[0]) || isNaN(sizeRange[1]) || sizeRange[0] > sizeRange[1]) {
+        alert('Please enter a valid size range (e.g., 10 - 30)');
+        return;
+      }
+
+      // Post message to Figma
+      parent.postMessage({ pluginMessage: { type: 'generateConfetti', shape, colors, density, sizeRange, spread, randomOrientation, pattern } }, '*');
     };
   </script>
 </body>
